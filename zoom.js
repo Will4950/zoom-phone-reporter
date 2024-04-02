@@ -291,7 +291,7 @@ export async function generateReport(processed_call_logs) {
 							rep_ext: internal_calls[rep].caller_ext_number,
 							rep_email: internal_calls[rep].caller_email,
 							customer_did: external_calls[leg].caller_did_number,
-							duration: internal_calls[rep].duration
+							duration: external_calls[leg].duration
 						});
 					} else {
 						items.push({
