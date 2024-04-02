@@ -175,15 +175,19 @@ export async function processCallLogs(zoom, call_logs) {
 		const call_start_time = new Date(
 			processed_call_logs.inbounds[call].start_time
 		).getTime();
-
 		const call_end_time = new Date(
 			processed_call_logs.inbounds[call].end_time
 		).getTime();
+		const callee_ext_number =
+			processed_call_logs.inbounds[call].callee_ext_number;
 
 		const call_leg = _.find(processed_call_logs.reptorep, (leg) => {
+			const leg_caller_ext_number = leg.caller_ext_number;
 			const leg_answer_time = new Date(leg.answer_time).getTime();
 			return (
-				leg_answer_time > call_start_time && leg_answer_time < call_end_time
+				leg_answer_time > call_start_time &&
+				leg_answer_time < call_end_time &&
+				callee_ext_number === leg_caller_ext_number
 			);
 		});
 
@@ -208,11 +212,18 @@ export async function processCallLogs(zoom, call_logs) {
 		const call_end_time = new Date(
 			processed_call_logs.outbounds[call].end_time
 		).getTime();
+		const caller_ext_number =
+			processed_call_logs.outbounds[call].caller_ext_number;
 
 		const call_leg = _.find(processed_call_logs.reptorep, (leg) => {
 			const leg_start_time = new Date(leg.start_time).getTime();
 			const leg_end_time = new Date(leg.end_time).getTime();
-			return leg_start_time < call_start_time && leg_end_time > call_end_time;
+			const leg_caller_ext_number = leg.caller_ext_number;
+			return (
+				leg_start_time < call_start_time &&
+				leg_end_time > call_end_time &&
+				caller_ext_number === leg_caller_ext_number
+			);
 		});
 
 		if (call_leg) {
